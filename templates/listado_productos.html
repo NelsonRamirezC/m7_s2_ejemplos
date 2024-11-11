@@ -1,3 +1,5 @@
+{% load filtros_productos_extras %}
+
 <header>
     <h1>Listado de productos</h1>
 
@@ -28,7 +30,11 @@
         <p>Cantidad de productos: {{productos|length}}</p>
         <ol>
         {% for producto in productos %}
-            <li>Nombre: {{producto.nombre}}, Precio: {{producto.precio}}, Stock: {{producto.stock}}</li>
+            <li>
+                Nombre: {{producto.nombre}}, 
+                Precio: $ {{producto.precio|currency}},
+                Stock: {{producto.stock|currency}}
+            </li>
         {% endfor %}
         </ol>
     </div>
