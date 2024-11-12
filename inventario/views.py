@@ -54,3 +54,9 @@ def listado_productos(request):
     
 
     return render(request, 'listado_productos.html', contexto)
+
+
+
+def add_producto(request):
+    contexto = {}
+    return render(request, 'add_producto.html', contexto)
