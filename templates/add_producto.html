@@ -7,7 +7,29 @@
     </header>
 
     <main class="container">
+        <section>
+            <h2>Formulario de creación de productos</h2>
+
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-6 col-lg-5">
+                    <form method="post" id="form_add_producto">
+                        {% csrf_token %}
+                        {{form}}
+                        <div>
+                            <input type="submit" value="Crear" class="btn btn-primary">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
         
     </main>
+
+
+<style>
+    #form_add_producto input{
+        margin: 5px 0px;
+    }
+</style>
 
 {% endblock contenido %}

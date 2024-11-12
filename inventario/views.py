@@ -4,7 +4,7 @@ from .models import Producto, Categoria
 from django.db.models import Q 
 from django.db.models import Count, Sum, Avg, Min, Max
 
-
+from .forms import ProductoForm
 
 # Create your views here.
 
@@ -59,4 +59,10 @@ def listado_productos(request):
 
 def add_producto(request):
     contexto = {}
-    return render(request, 'add_producto.html', contexto)
+        
+    if request.method == 'GET':
+        contexto["form"] = ProductoForm()
+        return render(request, 'add_producto.html', contexto)
+    
+    if request.method == 'POST':
+        pass
