@@ -43,7 +43,7 @@ def listado_productos(request):
     
 
     contexto["productos"] = productos
-    contexto["categorias"] = Categoria.objects.all()
+    contexto["categorias"] = Categoria.objects.all().order_by('nombre')
     contexto["nombre"] = nombre
     contexto["precio_min"] = precio_min
     contexto["precio_max"] = precio_max
