@@ -55,6 +55,7 @@
                 Vencimiento: N/A
                 {% endif %}
                 </strong>
+                <a class="btn btn-warning" href="{% url "update_producto" producto.id %}">Editar</a>
                 
             </li>
         {% endfor %}

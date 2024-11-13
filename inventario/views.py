@@ -79,6 +79,48 @@ def add_producto(request):
             messages.error(request, "Algo ha fallado, revise bien los datos ingresados.")
             return render(request, 'add_producto.html', contexto)
         
-def update_producto(request):
+        
+
+def update_producto(request, id_producto):
     contexto = {}
-    return render(request, 'update_producto.html', contexto)
+    
+    try:
+        producto = Producto.objects.get(pk=id_producto)
+        
+    except Producto.DoesNotExist:
+        messages.error(request, f"No existe un producto con id: {id_producto}")
+        return redirect('listado_productos')
+        
+    
+    if request.method == 'GET':
+        contexto["form"] = ProductoForm(instance=producto)
+        contexto["producto"] = producto
+        return render(request, 'update_producto.html', contexto)
+        
+        
+    if request.method == "POST":
+        form = ProductoForm(request.POST)
+        contexto["form"] = form 
+        
+        errores = ""
+        
+        if int(request.POST.get("precio")) < 1 :
+            errores = errores + "No puede ingresar precios con valor 0 o menos. | "
+            
+        if int(request.POST.get("stock")) < 0 :
+            errores  = errores + "No puede ingresar stock menor a 0."
+        
+        if errores:
+            messages.error(request, errores)
+            return render(request, 'update_producto.html', contexto)
+
+    
+        
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Producto actualizado con éxito.")
+            return redirect('listado_productos')
+            
+        else:
+            messages.error(request, "Revise los datos ingresados en el formulario y vuelva a intentarlo.")
+            return render(request, 'update_producto.html', contexto)

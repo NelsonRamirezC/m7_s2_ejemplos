@@ -23,6 +23,8 @@ class ProductoForm(ModelForm):
         
         help_texts = {
             "nombre": ("* El nombre debe contener sólo letras, espacio, -"),
+            "precio": ("* El precio debe ser mayor a 0"),
+            "stock": ("* El stock debe ser mayor o igual a 0"),
         }
         
         widgets = {
