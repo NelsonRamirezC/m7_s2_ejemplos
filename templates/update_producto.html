@@ -3,20 +3,20 @@
 {% block contenido %}
 
     <header class="py-3">
-        <h1 class="text-center">Agrega un nuevo producto.</h1>
+        <h1 class="text-center">Actualiza el producto: ...</h1>
     </header>
 
     <main class="container">
         <section>
-            <h3>Formulario de creación de productos</h3>
+            <h3>Formulario de actualización de producto</h3>
 
             <div class="row justify-content-center">
                 <div class="col-12 col-sm-6 col-lg-5">
-                    <form method="post" id="form_add_producto">
+                    <form method="post" id="form_update_producto">
                         {% csrf_token %}
                         {{form}}
                         <div>
-                            <input type="submit" value="Crear" class="btn btn-primary">
+                            <input type="submit" value="Actualizar" class="btn btn-warning">
                         </div>
                     </form>
                 </div>
@@ -27,7 +27,7 @@
 
 
 <style>
-    #form_add_producto input{
+    #form_update_producto input{
         margin: 5px 0px;
     }
 </style>
