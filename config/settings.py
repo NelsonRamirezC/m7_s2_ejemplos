@@ -13,6 +13,18 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from decouple import config
 # print(config)
 
+from django.contrib.messages import constants
+# CAMBIO DE VALORES EN ERRORES / MESSAGES
+
+
+MESSAGE_TAGS = {
+    constants.ERROR: 'danger',
+    constants.INFO: 'info',
+    constants.SUCCESS: 'success',
+    constants.WARNING: 'warning',
+    constants.DEBUG: 'primary',
+}
+
 
 from pathlib import Path
 

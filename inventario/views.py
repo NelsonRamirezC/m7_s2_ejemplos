@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from .models import Producto, Categoria
-
 from django.db.models import Q 
 from django.db.models import Count, Sum, Avg, Min, Max
-
 from .forms import ProductoForm
+from django.shortcuts import redirect
+from django.contrib import messages
 
 # Create your views here.
 
@@ -20,7 +20,7 @@ def listado_productos(request):
         nombre = ""
     
     contexto = {}
-    productos = Producto.objects.all().order_by('fecha_vencimiento')
+    productos = Producto.objects.all().order_by('-id')
     
     if nombre:
         productos = productos.filter(Q(nombre__icontains=nombre) | Q(descripcion__icontains=nombre))
@@ -65,4 +65,20 @@ def add_producto(request):
         return render(request, 'add_producto.html', contexto)
     
     if request.method == 'POST':
-        pass
+        
+        form = ProductoForm(request.POST)
+        contexto["form"] = form 
+        
+        if form.is_valid():
+            form.save()
+            
+            messages.success(request, "Producto creado correctamente.")
+            return redirect('listado_productos')
+            
+        else:
+            messages.error(request, "Algo ha fallado, revise bien los datos ingresados.")
+            return render(request, 'add_producto.html', contexto)
+        
+def update_producto(request):
+    contexto = {}
+    return render(request, 'update_producto.html', contexto)
