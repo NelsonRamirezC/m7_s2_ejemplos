@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .models import Producto, Categoria
 from django.db.models import Q 
 from django.db.models import Count, Sum, Avg, Min, Max
-from .forms import ProductoForm
+from .forms import ProductoFormAdd, ProductoFormUpdate
 from django.shortcuts import redirect
 from django.contrib import messages
 
@@ -61,14 +61,15 @@ def add_producto(request):
     contexto = {}
         
     if request.method == 'GET':
-        contexto["form"] = ProductoForm()
+        contexto["form"] = ProductoFormAdd()
         return render(request, 'add_producto.html', contexto)
     
     if request.method == 'POST':
         
-        form = ProductoForm(request.POST)
+        form = ProductoFormAdd(request.POST)
         contexto["form"] = form 
         
+        print(request.POST)
         if form.is_valid():
             form.save()
             
@@ -83,9 +84,9 @@ def add_producto(request):
 
 def update_producto(request, id_producto):
     contexto = {}
-    
+    print(request.POST)
     try:
-        producto = Producto.objects.get(pk=id_producto)
+        producto = Producto.objects.get(id=id_producto)
         
     except Producto.DoesNotExist:
         messages.error(request, f"No existe un producto con id: {id_producto}")
@@ -93,13 +94,19 @@ def update_producto(request, id_producto):
         
     
     if request.method == 'GET':
-        contexto["form"] = ProductoForm(instance=producto)
+        
+        producto.fecha_vencimiento = str(producto.fecha_vencimiento).replace("/", "-")
+        print(producto.fecha_vencimiento)
+        
+        form = ProductoFormUpdate(instance=producto)
+        contexto["form"] = form
+        
         contexto["producto"] = producto
         return render(request, 'update_producto.html', contexto)
         
         
     if request.method == "POST":
-        form = ProductoForm(request.POST)
+        form = ProductoFormUpdate(request.POST, instance=producto)
         contexto["form"] = form 
         
         errores = ""

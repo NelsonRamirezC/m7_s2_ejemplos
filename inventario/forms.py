@@ -3,8 +3,7 @@ from django import forms
 
 from .models import Producto
 
-class ProductoForm(ModelForm):
-    
+class ProductoFormAdd(ModelForm):
     class Meta:
         model = Producto
         fields = [
@@ -36,4 +35,32 @@ class ProductoForm(ModelForm):
             "categoria": forms.Select(attrs={"class": 'form-control'}),
         }
     
-    
+
+
+class ProductoFormUpdate(ModelForm):
+    class Meta:
+        model = Producto
+        fields = [
+            'id',
+            'nombre', 
+            'descripcion', 
+            'precio', 
+            'stock', 
+            'fecha_vencimiento', 
+            'categoria'
+            ]
+        
+        labels = {
+            "descripcion": ("Descripción"),
+            "categoria": ("Categoría"),
+        }
+         
+        widgets = {
+            "id": forms.HiddenInput(attrs={"class": 'form-control'}),
+            "nombre": forms.TextInput(attrs={"class": 'form-control', 'maxlength': 50}),
+            "descripcion": forms.Textarea(attrs={"class": 'form-control', "rows": 3}),
+            "precio": forms.NumberInput(attrs={"class": 'form-control', 'min': 1}),
+            "stock": forms.NumberInput(attrs={"class": 'form-control', 'min': 0}),
+            "fecha_vencimiento": forms.DateInput(attrs={"class": 'form-control', 'type': 'date'}),
+            "categoria": forms.Select(attrs={"class": 'form-control'}),
+        }

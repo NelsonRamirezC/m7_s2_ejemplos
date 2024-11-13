@@ -18,6 +18,7 @@ class Categoria(models.Model):
 
 
 class Producto(models.Model):
+    id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=255, blank=True, null=True)
     precio = models.DecimalField(max_digits=9, decimal_places=0, blank=True, null=True)
