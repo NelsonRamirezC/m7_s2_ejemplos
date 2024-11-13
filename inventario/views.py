@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.db.models import Count, Sum, Avg, Min, Max
 from .forms import ProductoFormAdd, ProductoFormUpdate
 from django.shortcuts import redirect
+
 from django.contrib import messages
 
 # Create your views here.
@@ -131,3 +132,5 @@ def update_producto(request, id_producto):
         else:
             messages.error(request, "Revise los datos ingresados en el formulario y vuelva a intentarlo.")
             return render(request, 'update_producto.html', contexto)
+
+

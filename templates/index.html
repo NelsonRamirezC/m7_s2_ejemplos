@@ -8,7 +8,16 @@
 </header>
 
 <main class="container">
-    
+    <h3>Fecha actual:  <span id="fecha_actual"></span></h3>
 </main>
+
+<script>
+
+    moment.locale("es")
+    const fecha_actual = document.getElementById("fecha_actual");
+
+    fecha_actual.innerText = moment().format("LLLL")
+</script>
+
 
 {% endblock contenido %}
