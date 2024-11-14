@@ -16,7 +16,7 @@
                         {% csrf_token %}
                         {{form}}
                         <div>
-                            <input type="submit" value="Crear" class="btn btn-primary">
+                            <input type="submit" value="Crear" class="btn btn-primary" id="btn-crear">
                         </div>
                     </form>
                 </div>
@@ -31,5 +31,17 @@
         margin: 5px 0px;
     }
 </style>
+
+<script>
+    const form_add_producto = document.getElementById("form_add_producto")
+
+    form_add_producto.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        document.getElementById("btn-crear").setAttribute("disabled", true)
+
+        form_add_producto.submit()
+    })
+</script>
 
 {% endblock contenido %}
