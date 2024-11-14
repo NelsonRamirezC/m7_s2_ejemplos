@@ -85,7 +85,6 @@ def add_producto(request):
 
 def update_producto(request, id_producto):
     contexto = {}
-    print(request.POST)
     try:
         producto = Producto.objects.get(id=id_producto)
         
@@ -132,5 +131,20 @@ def update_producto(request, id_producto):
         else:
             messages.error(request, "Revise los datos ingresados en el formulario y vuelva a intentarlo.")
             return render(request, 'update_producto.html', contexto)
+        
+
+def delete_producto(request, id_producto):
+    
+    try:
+        producto = Producto.objects.get(id=id_producto)
+        
+    except Producto.DoesNotExist:
+        messages.error(request, f"No existe un producto con id: {id_producto}")
+        return redirect('listado_productos')
+    
+    producto.delete()
+        
+    messages.success(request, f"Producto con ID: {id_producto} eliminado con éxito.")
+    return redirect('listado_productos')
 
 

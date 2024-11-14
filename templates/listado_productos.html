@@ -42,25 +42,47 @@
     <div>
         <h3>Listado de productos</h3>
         <p>Cantidad de productos: {{productos|length}}</p>
-        <ol>
-        {% for producto in productos %}
-            <li>
-                Nombre: {{producto.nombre}}, 
-                Precio: $ {{producto.precio|currency}},
-                Stock: {{producto.stock|currency}},
-                <strong>
-                {% if  producto.fecha_vencimiento%}
-                Vencimiento: {{producto.fecha_vencimiento|date:"d/m/Y" }}
-                {% else %}
-                Vencimiento: N/A
-                {% endif %}
-                </strong>
-                <a class="btn btn-warning" href="{% url "update_producto" producto.id %}">Editar</a>
-                
-            </li>
-        {% endfor %}
-        </ol>
-    </div>
+        
+            <section class="container">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Stock</th>
+                        <th scope="col">fech. venc.</th>
+                        <th scope="col">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for producto in productos %}
+                            <tr>
+                                <th scope="row">{{producto.id}}</th>
+                                <td>{{producto.nombre|currency}}</td>
+                                <td>{{producto.precio|currency}}</td>
+                                <td>{{producto.stock}}</td>
+                                {% if  producto.fecha_vencimiento%}
+                                <td>{{producto.fecha_vencimiento|date:"d/m/Y"}}</td>
+                                {% else %}
+                                <td>N/A</td>
+                                {% endif %}
+                                <td>
+                                    <a class="btn btn-warning" href="{% url "update_producto" producto.id %}">Editar</a>
+
+                                    <a data-producto_id="{{producto.id}}" class="btn btn-danger btn-eliminar" href="{% url "delete_producto" producto.id %}" id="btn_eliminar{{producto.id}}">Eliminar</a>
+
+                                    <button class="btn btn-danger" type="button" disabled style="display:none;" id="spinner_eliminar{{producto.id}}">
+                                        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                        <span role="status">Eliminando</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+            </section>
+        </div>
     <hr>
     <div>
         <h3>Listado de categorias</h3>
@@ -103,6 +125,32 @@
     
         form_filtro_productos.submit()
     })
+
+
+    // lógica para capturar evento de los enlaces eliminar
+
+    let btns_eliminar = document.querySelectorAll(".btn-eliminar");
+    btns_eliminar = [...btns_eliminar];
+
+    btns_eliminar.forEach(boton => {
+        boton.addEventListener("click", (event) => {
+            event.preventDefault();
+            producto_id = boton.dataset.producto_id;
+            confirmacion = confirm(`¿Está seguro que desea eliminar el producto con ID ${producto_id}?`)
+
+            if(confirmacion){
+
+                spinner_eliminar = "spinner_eliminar"+producto_id
+                btn_eliminar = "btn_eliminar"+producto_id
+                
+                document.getElementById(btn_eliminar).style.display = "none";
+                document.getElementById(spinner_eliminar).style.display = "inline-block";
+
+                location.href = boton.href
+            }
+        })
+    })
+
 </script>
 
 {% endblock contenido %}
