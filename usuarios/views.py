@@ -1,12 +1,18 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView, LogoutView
-from django.http import HttpRequest
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.shortcuts import redirect
+from django.shortcuts import render
 
 from django.contrib.auth.models import Permission
+
+from .forms import PerfilFormUpdate
+from django.contrib.auth.models import User
+
+from .models import Perfil
 
 
 # VISTA BASADA EN CLASE PARA REGISTRO
@@ -52,3 +58,52 @@ class UserLogoutView(LogoutView):
         messages.success(self.request, 'Ha cerrado la sesión exitosamente.')
         return super().dispatch(request, *args, **kwargs)
     
+    
+    
+def update_perfil(request, id_usuario):
+    contexto = {}
+    try:
+        usuario = User.objects.get(id=id_usuario)
+        
+    except User.DoesNotExist:
+        messages.error(request, f"No existe un usuario con id: {id_usuario}")
+        return redirect('index')
+    
+    perfil = None
+    try:
+        perfil = Perfil.objects.get(usuario=usuario)
+        
+    except Perfil.DoesNotExist:
+        perfil = Perfil(usuario=usuario)
+        perfil.save()
+        
+    if request.method == 'GET':
+        
+                
+        form = PerfilFormUpdate(instance=perfil)
+        contexto["form"] = form
+        
+        contexto["perfil"] = perfil
+        contexto["usuario"] = usuario
+        return render(request, 'usuarios/update_perfil.html', contexto)
+        
+        
+    if request.method == "POST":
+        form = PerfilFormUpdate(request.POST, instance=perfil)
+        contexto["form"] = form 
+        
+        #cambiar datos del usuario (DJANGO)
+        
+        nombre = request.POST.get("nombre")
+        
+        usuario.first_name = nombre
+        usuario.save()
+        
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Perfil actualizado con éxito.")
+            return redirect('index')
+            
+        else:
+            messages.error(request, "Revise los datos ingresados en el formulario y vuelva a intentarlo.")
+            return render(request, 'usuarios/update_perfil.html', contexto)

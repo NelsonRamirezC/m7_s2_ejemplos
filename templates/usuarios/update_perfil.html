@@ -1,0 +1,27 @@
+{% extends "layouts/base.html" %}
+
+
+{% block contenido %}
+
+<main class="container">
+    <section>
+        <h1 class="text-center py-5">Perfil de usuario: ({{usuario.id}})-{{usuario.username}}</h1>
+    </section>
+    <section>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-5 col-lg-4">
+                <form method="post">
+                    <div>
+                        <label for="" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" name="nombre" value="{{usuario.first_name}}">
+                    </div>
+                    {% csrf_token %}
+                    {{form}}
+                    <input type="submit" value="Actualizar" class="btn btn-warning">
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% endblock contenido %}
