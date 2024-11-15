@@ -11,12 +11,20 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-5 col-lg-4">
                 <form method="post">
-                    <div>
+                    {% comment %} <div>
                         <label for="" class="form-label">Nombre</label>
                         <input type="text" class="form-control" name="nombre" value="{{usuario.first_name}}">
-                    </div>
+                    </div> {% endcomment %}
                     {% csrf_token %}
-                    {{form}}
+                    <fieldset>
+                        <legend>Datos de usuario:</legend> 
+                        {{form_usuario}}
+                    </fieldset>
+                    <hr>
+                    <fieldset>
+                        <legend>Datos de perfil:</legend> 
+                        {{form_perfil}}
+                    </fieldset>
                     <input type="submit" value="Actualizar" class="btn btn-warning">
                 </form>
             </div>

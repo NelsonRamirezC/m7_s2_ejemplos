@@ -9,11 +9,12 @@ from django.shortcuts import render
 
 from django.contrib.auth.models import Permission
 
-from .forms import PerfilFormUpdate
 from django.contrib.auth.models import User
-
 from .models import Perfil
 
+
+#importación de formularios:
+from .forms import PerfilFormUpdate, UserFormUpdate
 
 # VISTA BASADA EN CLASE PARA REGISTRO
 class UserRegistroView(CreateView):
@@ -69,7 +70,6 @@ def update_perfil(request, id_usuario):
         messages.error(request, f"No existe un usuario con id: {id_usuario}")
         return redirect('index')
     
-    perfil = None
     try:
         perfil = Perfil.objects.get(usuario=usuario)
         
@@ -79,9 +79,11 @@ def update_perfil(request, id_usuario):
         
     if request.method == 'GET':
         
-                
-        form = PerfilFormUpdate(instance=perfil)
-        contexto["form"] = form
+        form_perfil = PerfilFormUpdate(instance=perfil)
+        form_usuario = UserFormUpdate(instance=usuario)
+        
+        contexto["form_perfil"] = form_perfil
+        contexto["form_usuario"] = form_usuario
         
         contexto["perfil"] = perfil
         contexto["usuario"] = usuario
@@ -89,18 +91,24 @@ def update_perfil(request, id_usuario):
         
         
     if request.method == "POST":
-        form = PerfilFormUpdate(request.POST, instance=perfil)
-        contexto["form"] = form 
+        form_perfil = PerfilFormUpdate(request.POST, instance=perfil)
+        form_usuario = UserFormUpdate(request.POST, instance=usuario)
+        contexto["form_perfil"] = form_perfil
+        contexto["form_usuario"] = form_usuario
         
         #cambiar datos del usuario (DJANGO)
         
-        nombre = request.POST.get("nombre")
+        # nombre = request.POST.get("nombre")
         
-        usuario.first_name = nombre
-        usuario.save()
+        # usuario.first_name = nombre
+        # usuario.save()
         
-        if form.is_valid():
-            form.save()
+        #opcional hacer el update en una línea
+        
+        # User.objects.update(first_name=nombre)
+        if form_perfil.is_valid() and form_usuario.is_valid():
+            form_perfil.save()
+            form_usuario.save()
             messages.success(request, "Perfil actualizado con éxito.")
             return redirect('index')
             

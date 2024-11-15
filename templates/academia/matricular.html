@@ -1,0 +1,21 @@
+{% extends "layouts/base.html" %}
+
+{% block contenido %}
+
+<header class="py-3">
+    <h1 class="text-center">Matricula de cursos para el estudiante: {{estudiante}}</h1>
+</header>
+<main class="container">
+    <section>
+        <h3>Cursos disponibles:</h3>
+
+        <ol>
+            {% for curso in cursos %}
+                <li>{{curso}}</li>
+            {% endfor %}
+        </ol>
+
+    </section>
+</main>
+
+{% endblock contenido %}
