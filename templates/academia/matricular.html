@@ -9,11 +9,27 @@
     <section>
         <h3>Cursos disponibles:</h3>
 
-        <ol>
-            {% for curso in cursos %}
-                <li>{{curso}}</li>
-            {% endfor %}
-        </ol>
+        <form method="post">
+            {% csrf_token %}
+            <ol>
+                {% for curso in cursos_disponibles %}
+                    <li>
+                        <input type="checkbox" name="cursos" value="{{curso.id}}"> {{curso.nombre}}
+                    </li>
+                {% endfor %}
+            </ol>
+    
+            <h3>Cursos Inscritos:</h3>
+            <ol>
+                {% for curso in cursos_inscritos %}
+                    <li>
+                        <input type="checkbox" name="cursos" value="{{curso.id}}" checked> {{curso.nombre}}
+                    </li>
+                {% endfor %}
+            </ol>
+            <input type="submit" class="btn btn-primary" value="Actualizar cursos">
+        </form>
+        
 
     </section>
 </main>
