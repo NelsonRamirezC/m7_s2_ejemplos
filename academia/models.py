@@ -4,7 +4,8 @@ from django.db import models
 
 class Curso(models.Model):
     nombre = models.CharField(max_length=50, null=False, blank=False)
-    descripcion = models.TextField(null=True, blank=True)   
+    descripcion = models.TextField(null=True, blank=True)
+    imagen = models.URLField(blank=False, null=False, default="https://st3.depositphotos.com/16203680/19307/v/950/depositphotos_193076602-stock-illustration-question-mark-hand-drawn-symbol.jpg")
     
     def __str__(self):
         return self.nombre

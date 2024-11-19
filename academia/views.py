@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.db import connection
 
 from .models import Curso, Estudiante
 
@@ -54,3 +55,32 @@ def matricular(request, estudiante_id):
         contexto["cursos_inscritos"] = estudiante.cursos.all()
         
         return render(request, "academia/matricular.html", contexto)
+    
+    
+def cursos(request):
+    contexto = {}
+    cursos = Curso.objects.prefetch_related("estudiantes")
+    
+    with connection.cursor() as cursor:
+        cursor.execute("select count(id) from cursos")
+        row = cursor.fetchone()
+        print(row)
+        cantidad_cursos = row[0]
+        contexto["cantidad_cursos"] = cantidad_cursos
+        
+    contexto["cursos"] = cursos
+    return render(request, 'academia/cursos.html', contexto)
+
+def detalle_curso(request, curso_id):
+    contexto = {}
+    try:
+        
+        curso =  Curso.objects.get(id=curso_id)
+    except curso.DoesNotExist:
+        messages.error(request, f"No existe el curso con id: {curso_id}")
+        return redirect('cursos')
+    
+    contexto["curso"] = curso
+    
+    
+    return render(request, 'academia/detalle_curso.html', contexto)
