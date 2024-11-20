@@ -84,3 +84,18 @@ def detalle_curso(request, curso_id):
     
     
     return render(request, 'academia/detalle_curso.html', contexto)
+
+def estudiantes(request):
+    contexto = {}
+    estudiantes = Estudiante.objects.prefetch_related("cursos")
+    contexto["estudiantes"] = estudiantes 
+    
+    return render(request, "academia/estudiantes.html", contexto)
+
+
+def detalle_estudiante(request, estudiante_id):
+    contexto = {}
+    estudiante = Estudiante.objects.prefetch_related("cursos").get(id=estudiante_id)
+    contexto["estudiante"] = estudiante 
+    
+    return render(request, "academia/detalle_estudiante.html", contexto)
