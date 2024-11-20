@@ -95,7 +95,21 @@ def estudiantes(request):
 
 def detalle_estudiante(request, estudiante_id):
     contexto = {}
-    estudiante = Estudiante.objects.prefetch_related("cursos").get(id=estudiante_id)
-    contexto["estudiante"] = estudiante 
+    # estudiante = Estudiante.objects.prefetch_related("cursos").get(id=estudiante_id)
+    # contexto["estudiante"] = estudiante
+    
+    contexto["estudiante"]= Estudiante.objects.values("id", "nombre", "apellido").get(id=estudiante_id)
+    
+    cursos = Curso.objects.raw(""" 
+                            select c.id, c.nombre, c.descripcion, c.imagen from cursos c
+                            inner join estudiantes_cursos ec 
+                            on C.id = EC.curso_id
+                            where estudiante_id = %s
+                            order by c.nombre;  
+                            """, [estudiante_id])
+    
+    # cursos = Curso.objects.all().filter(estudiantes__id=estudiante_id).values("id", "nombre", "descripcion", "imagen").order_by("nombre")
+
+    contexto["cursos"] =  cursos
     
     return render(request, "academia/detalle_estudiante.html", contexto)

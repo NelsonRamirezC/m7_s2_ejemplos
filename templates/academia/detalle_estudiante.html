@@ -2,6 +2,18 @@
 
 {% block contenido %}
 
+    <style>
+        .img-table {
+            width: 100px;
+            aspect-ratio: 1/1;
+        }
+
+        .custom-tooltip {
+            --bs-tooltip-bg: orange;
+            --bs-tooltip-color: black;
+        }
+    </style>
+
     <header>
         <h1 class="text-center py-3">Detalle del estudiante: {{estudiante.nombre}} {{estudiante.apellido}}</h1>
     </header>
@@ -10,13 +22,50 @@
         <section id="cursos_inscritos">
             <h3>Cursos inscritos:</h3>
 
-            <ol>
-                {% for curso in estudiante.cursos.all %}
-                    <li>{{curso.nombre}}</li>
-                {% endfor %}
-            </ol>
+            <div class="container_table">
+                <table class="table table-striped-columns">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Curso</th>
+                        <th scope="col">Detalle</th>
+                        <th scope="col">Imagen</th>
+                        {% comment %} <th scope="col">Ver detalle</th> {% endcomment %}
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for curso in cursos %}
+                            <tr class="align-middle">
+                                <th scope="row">{{curso.id}}</th>
+                                <td>{{curso.nombre}}</td>
+                                <td>{{curso.descripcion}}</td>
+                                <td>
+                                    <a href="{% url "detalle_curso" curso.id %}"
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="right" 
+                                    data-bs-title="Clic para ver detalle del curso: {{curso.nombre}}"
+                                    data-bs-custom-class="custom-tooltip"
+                                    >
+                                        <img src="{{curso.imagen}}" alt="{{curso.nombre}}" class="img-table">
+                                    </a>
+                                </td>
+                                {% comment %} <td>
+                                    <a href="{% url "detalle_curso" curso.id %}" class="btn btn-primary">Ver más</a>
+                                </td> {% endcomment %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+            </div>
             
         </section>
 
     </main>
+
+    <script>
+
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+
 {% endblock contenido %}
