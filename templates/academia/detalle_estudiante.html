@@ -15,12 +15,12 @@
     </style>
 
     <header>
-        <h1 class="text-center py-3">Detalle del estudiante: {{estudiante.nombre}} {{estudiante.apellido}}</h1>
+        <h1 class="text-center py-3">Detalle del estudiante: {{estudiante.nombre}} {{estudiante.apellido}} (id: {{estudiante.id}})</h1>
     </header>
 
     <main class="container py-5">
         <section id="cursos_inscritos">
-            <h3>Cursos inscritos:</h3>
+            <h3>Cursos inscritos ({{estudiante.cantidad_cursos}}):</h3>
 
             <div class="container_table">
                 <table class="table table-striped-columns">

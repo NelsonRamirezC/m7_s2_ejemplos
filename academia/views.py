@@ -5,6 +5,9 @@ from django.db import connection
 
 from .models import Curso, Estudiante
 
+from django.db.models import Count, Avg, Min, Max
+
+
 
 
 # Create your views here.
@@ -98,18 +101,31 @@ def detalle_estudiante(request, estudiante_id):
     # estudiante = Estudiante.objects.prefetch_related("cursos").get(id=estudiante_id)
     # contexto["estudiante"] = estudiante
     
-    contexto["estudiante"]= Estudiante.objects.values("id", "nombre", "apellido").get(id=estudiante_id)
+    #contexto["estudiante"]= Estudiante.objects.values("id", "nombre", "apellido").get(id=estudiante_id)
     
-    cursos = Curso.objects.raw(""" 
-                            select c.id, c.nombre, c.descripcion, c.imagen from cursos c
-                            inner join estudiantes_cursos ec 
-                            on C.id = EC.curso_id
-                            where estudiante_id = %s
-                            order by c.nombre;  
-                            """, [estudiante_id])
+    estudiante= Estudiante.objects.annotate(cantidad_cursos=Count("cursos")).values('id', 'nombre', 'apellido', 'cantidad_cursos').order_by('id').get(id=estudiante_id)
+    
+    contexto["estudiante"] = estudiante
+    # select e.id, e.nombre, e.apellido, count(*) as cantidad_cursos from estudiantes e 
+    # inner join estudiantes_cursos ec 
+    # on e.id = ec.estudiante_id 
+    # where e.id = 1
+    # group by e.id, e.nombre, e.apellido
+    
+    # consulta_sql = """ 
+    #                         select c.id, c.nombre, c.descripcion, c.imagen from cursos c
+    #                         inner join estudiantes_cursos ec 
+    #                         on C.id = EC.curso_id
+    #                         where estudiante_id = %s
+    #                         order by c.nombre;  
+    #             """
+    
+    # valores_consulta = [estudiante_id]
+    
+    # cursos = Curso.objects.raw(consulta_sql, valores_consulta)
     
     # cursos = Curso.objects.all().filter(estudiantes__id=estudiante_id).values("id", "nombre", "descripcion", "imagen").order_by("nombre")
-
-    contexto["cursos"] =  cursos
+    
+    contexto["cursos"] =  Estudiante.obtener_cursos(estudiante_id)
     
     return render(request, "academia/detalle_estudiante.html", contexto)
